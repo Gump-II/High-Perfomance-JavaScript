@@ -72,18 +72,14 @@ var emp = new Employee('keepfool@xxx.com');
 **原型链**
 
 | 编号 | 原型链                                      |	原型链指向的对象  |	描述  |
-|: ----:|:------------------------------------------|:-----------------|:----|
+| :----: | :------------------------------------------ | :----------------- | :---- |
 | 1	   | emp.__proto__	                            | Employee.prototype |	Employee()构造函数的原型对象 |
 | 2    |	emp.__proto__.__proto__	                | Person.prototype   |	Person()构造函数的原型对象 |
 | 3	   | emp.__proto__.__proto__.__proto__	        | Object.prototype   |	Object()构造函数的原型对象 |
 | 4	   | emp.__proto__.__proto__.__proto__.__proto__|	null            |	原型链的顶端 |
 
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+
 
 
 
