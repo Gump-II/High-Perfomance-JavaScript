@@ -37,6 +37,46 @@
 
 ### 第二章：数据存取
 
+- 1.访问函数中的局部变量最快，全局变量最慢。由于全局变量在作用域链最后位置，访问最深，所以速度最慢。
+- 2.访问全局变量将遍历整个作用域链，减少全局变量的使用，方法:使用局部变量存储全局变量。
+- 3.`with`和`catch`会提升作用域链，可能将全局变量提升到局部变量之前，反而没得到提升还可能降低性能。少用with，适当catch，catch中可以用委托函数处理的方式来不改变性能。
+- 4.闭包中包含了执行环境作用域链相同的应用，需要更多的内存开销，容易导致内存泄漏。将常用的跨作用域存储在局部变量中。
+- 5.原型链的理解：
+```java
+function Person(){
+    this.name = "Tom";
+    this.sayHello = function(){
+        return "Hello "+this.name;
+    }
+}
+function Employee(email){
+    this.email = email;
+}
+//Employee.prototype上定义属性和方法，可以被Emplyee实例使用
+var person = new Person();
+//实现了原形继承，Employee可以使用Person类的属性和方法
+Employee.prototype = person;
+
+//总结：原型继承本质是将构造函数的原型对象指向另外一个构造函数创建的实例
+//Employee.prototype = new Person()
+//Employee()构造函数继承了Person()构造函数
+var emp = new Employee('keepfool@xxx.com');
+
+```
+> Employee()构造函数的原型引用了一个由Person()构造函数创建的实例，从而建立了Employee()和Person()的继承关系。
+
+> 当设置了`Employee.prototype = new Person();`Employee的实例的`constructor`指向了Person()的构造函数。构造函数被改写了。
+
+> 解决方法：`Employee.prototype.constructor = Employee`
+
+**原型链**
+
+编号|原型链                                      |	原型链指向的对象  |	描述
+1	|emp.__proto__	                            |Employee.prototype |	Employee()构造函数的原型对象
+2   |	emp.__proto__.__proto__	                |Person.prototype   |	Person()构造函数的原型对象
+3	|emp.__proto__.__proto__.__proto__	        |Object.prototype   |	Object()构造函数的原型对象
+4	|emp.__proto__.__proto__.__proto__.__proto__|	null            |	原型链的顶端
+
 
 
 
