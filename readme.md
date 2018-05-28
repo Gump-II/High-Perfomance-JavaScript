@@ -109,7 +109,6 @@ function loopCollection(){
         /*代码处理*/
     }
 }
-
 //较快
 function looCopiedArray(){
     for(var count = 0; count < arr.length; count++){
