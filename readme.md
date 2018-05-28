@@ -35,7 +35,7 @@
 ```
 - 5.使用XHR对象下载Javascript代码并注入页面中。
 
-### 第二章：数据存取
+### 第2章：数据存取
 
 - 1.访问函数中的局部变量最快，全局变量最慢。由于全局变量在作用域链最后位置，访问最深，所以速度最慢。
 - 2.访问全局变量将遍历整个作用域链，减少全局变量的使用，方法:使用局部变量存储全局变量。
@@ -94,7 +94,43 @@ var emp = new Employee('keepfool@xxx.com');
 
 > 6.为了提升速度，通常可以把对象成员、数组元素、跨域变量保存在局部变量中来改善性能。
 
+### 第3章：DOM编程
 
+- 1.Dom的访问与修改，用局部变量存储修改的内容，最后一次性写入，提供性能。
+- 2.使用`innerHTML`比原生`DOM`方法更快。
+- 3.读取集合的`length`比普通数组的`length`要慢很多。
+```java
+var coll = document.getElementByTagName('div');
+var arr = toArray(coll);
+
+//较慢
+function loopCollection(){
+    for(var count = 0; count < coll.length; count++){
+        /*代码处理*/
+    }
+}
+
+//较快
+function looCopiedArray(){
+    for(var count = 0; count < arr.length; count++){
+        /*代码处理*/
+    }
+}
+```
+
+- 4.访问集合元素时使用局部变量。
+- 5.重绘和重排代价昂贵，减少发生次数，合并多次对DOM和样式的修改，一次处理。防止重拍:1.文档之外创建更新一个文档片段，然后附加到原始列表中。2.创建备份，对副本进行操作，然后新节点替代旧节点。
+```java
+//糟糕的写法，造成三次浏览器重排
+var el = document.getElementById('mydiv');
+el.style.borderLeft = '1px';
+el.sytle.borderRight = '1px';
+el.style.padding = '5px'
+
+//较好的写法，一次重拍
+var el = document.getElementById('mydiv');
+el.style.cssText = 'border-left:1px; border-right:2px; padding:5px';
+```
 
 
 
