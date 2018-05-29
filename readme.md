@@ -118,7 +118,7 @@ function looCopiedArray(){
 ```
 
 - 4.访问集合元素时使用局部变量。
-- 5.重绘和重排代价昂贵，减少发生次数，合并多次对DOM和样式的修改，一次处理。防止重拍:1.文档之外创建更新一个文档片段，然后附加到原始列表中。2.创建备份，对副本进行操作，然后新节点替代旧节点。
+- 5.重绘和重排代价昂贵，减少发生次数，合并多次对DOM和样式的修改，一次处理。防止重排:1.文档之外创建更新一个文档片段，然后附加到原始列表中。2.创建备份，对副本进行操作，然后新节点替代旧节点。
 ```java
 //糟糕的写法，造成三次浏览器重排
 var el = document.getElementById('mydiv');
@@ -130,6 +130,50 @@ el.style.padding = '5px'
 var el = document.getElementById('mydiv');
 el.style.cssText = 'border-left:1px; border-right:2px; padding:5px';
 ```
+- 6.使用缓存信息
+
+```java
+//效率低，每次移动都要查询便宜量
+myElement.style.left = 1 + myElement.offsetLeft + 'px';
+myElement.style.top = 1 + myElement.offsetTop + 'px';
+if(myElement.offsetLeft >= 500){
+    stopAnimation()
+}
+
+//效率高，缓存偏移量
+current++;
+myElement.style.left = current + 'px';
+myElement.style.left = current + 'px';
+if(current >= 500){
+    stopAnimation();
+}
+```
+
+- 7.DOM标准，每个事件经历三个阶段：捕获、达到目标、冒泡。
+**事件委托**
+事件委托是利用事件冒泡原理(事件从最深的节点开始，向上传播。子节点事件委托父节点代为执行事件)实现。
+
+```html
+
+<ul id="ul1">
+    <li>111</li>
+    <li>222</li>
+    <li>333</li>
+    <li>444</li>
+</ul>
+
+window.onload = function(){
+    var oUl = document.getElementById("ul1");
+    var aLi = oUl.getElementsByTagName('li');
+    for(var i=0;i<aLi.length;i++){
+        aLi[i].onclick = function(){
+            alert(123);
+        }
+    }
+}
+
+```
+
 
 
 
