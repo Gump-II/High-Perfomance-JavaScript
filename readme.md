@@ -161,7 +161,7 @@ if(current >= 500){
     <li>333</li>
     <li>444</li>
 </ul>
-
+//Dom操作，找ul->li才能执行操作，每次点击都要执行一次
 window.onload = function(){
     var oUl = document.getElementById("ul1");
     var aLi = oUl.getElementsByTagName('li');
@@ -169,6 +169,13 @@ window.onload = function(){
         aLi[i].onclick = function(){
             alert(123);
         }
+    }
+}
+//采用事件委托的方式，有父节点ul代为执行子节点点击时间
+window.onload = function(){
+    var oUl = document.getElementById("ul1");
+   oUl.onclick = function(){
+        alert(123);
     }
 }
 
