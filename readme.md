@@ -173,7 +173,8 @@ window.onload = function(){
         }
     }
 }
-//采用事件委托的方式，有父节点ul代为执行子节点点击时间
+//采用事件委托的方式，有父节点ul代为执行子节点点击事件
+
 window.onload = function(){
     var oUl = document.getElementById("ul1");
    oUl.onclick = function(){
@@ -181,7 +182,127 @@ window.onload = function(){
     }
 }
 
+//采用如上事件委托问题：当点击ul的时候也会触发事件，就用到了Event的target
+window.onload = function(){
+　　var oUl = document.getElementById("ul1");
+　　oUl.onclick = function(ev){
+　　　　var ev = ev || window.event;
+　　　　var target = ev.target || ev.srcElement;
+　　　　if(target.nodeName.toLowerCase() == 'li'){
+　 　　　　　　	alert(123);
+　　　　　　　  alert(target.innerHTML);
+　　　　}
+　　}
+}
+
 ```
+**如果遇到每个li的点击事件不同，则采用如下代码：**
+
+```html
+//采用四次Dom操作方式
+<div id="box">
+        <input type="button" id="add" value="添加" />
+        <input type="button" id="remove" value="删除" />
+        <input type="button" id="move" value="移动" />
+        <input type="button" id="select" value="选择" />
+    </div>
+window.onload = function(){
+    var Add = document.getElementById("add");
+    var Remove = document.getElementById("remove");
+    var Move = document.getElementById("move");
+    var Select = document.getElementById("select");
+    
+    Add.onclick = function(){
+        alert('添加');
+    };
+    Remove.onclick = function(){
+        alert('删除');
+    };
+    Move.onclick = function(){
+        alert('移动');
+    };
+    Select.onclick = function(){
+        alert('选择');
+    }
+    
+}
+
+//事件委托优化方式，采用一次Dom操作，效果更好
+window.onload = function(){
+    var oBox = document.getElementById("box");
+    oBox.onclick = function (ev) {
+        var ev = ev || window.event;
+        var target = ev.target || ev.srcElement;
+        if(target.nodeName.toLocaleLowerCase() == 'input'){
+            switch(target.id){
+                case 'add' :
+                    alert('添加');
+                    break;
+                case 'remove' :
+                    alert('删除');
+                    break;
+                case 'move' :
+                    alert('移动');
+                    break;
+                case 'select' :
+                    alert('选择');
+                    break;
+            }
+        }
+    }
+}
+```
+### 第3章：算法和流程控制
+
+- 1.JS循环体有`for`,`while`,`do while`,`for in`四种，其中`for in`循环体速度比其他慢，其他循环体之间的速度差异不大。
+```java
+for(var i = 0; i < item.length; i++){
+    process(item[i]);
+}
+
+var j = 0;
+while(j < items.length){
+    process(item[j++]);
+}
+
+var k = 0;
+do{
+    process(items[k++]);
+}while(k < items.length);
+```
+- 2.优化循环减少对象成员及数组项的查找次数，保存在局部变量中。
+```
+for(var i = 0;len = items.length; i < len; i++){
+    process(items[i]);
+}
+```
+
+- 3.排除额外操作带来性能影响，倒序循环会提升速度性能。
+- 4.达夫设备，每次循环中最多调用八次循环，同时存放余数。
+
+```java
+var i = items.length % 8;
+while(i) {
+  process(items[i--]);
+}
+ 
+i = Math.floor(items.length / 8);
+ 
+while(i) {
+  process(items[i--]);
+  process(items[i--]);
+  process(items[i--]);
+  process(items[i--]);
+  process(items[i--]);
+  process(items[i--]);
+  process(items[i--]);
+  process(items[i--]);
+}
+```
+
+
+
+
 
 
 
