@@ -300,6 +300,14 @@ while(i) {
 }
 ```
 
+- 5.基于函数的迭代`forEach`,接受三个参数：当前数组值value、索引index、数组本身array。循环迭代比函数迭代快。
+```java
+items.forEach(function(value, index, array){
+    process(value);
+})
+```
+- `switch`比`if-else`运行的快，优化if-else，最有可能出现的情况
+
 
 
 
