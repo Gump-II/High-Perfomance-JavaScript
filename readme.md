@@ -331,11 +331,119 @@ str += "two";
 - 5.正则表达式不是最好的工具，例如在搜索字面字符串的时候。
 - 6.用正则表达式来去掉字符串首尾空白，是最好的方式。
 
+### 第6章：快速响应的用户界面
+
+- 1.Js任务执行超过`100ms`，用户会感觉到明显的延迟，体验感不好。
+- 2.Js定时器让出UI线程的控制权(UI)可以更新。函数`greeting`将在250ms后执行，在此期间UI更新和其他Js可以执行。
+```java
+function greeting(){
+    alert("Hello world");
+}
+setTimeOut(greeting, 250);
+```
+- 3.Javascript定时器不太精确，通常与几毫秒，推荐延时25ms。
+- 4.如果函数运行时间太长，用定时器进行分割任务。
+```java
+//文件操作
+function saveDocument(id){
+    openDocument(id);
+    writeText(id);
+    closeDocument(id);
+    //更新界面
+    updateUI(id);
+}
+
+//定时器分割任务
+function saveDocument(id){
+    var tasks = [openDocument, writeText, closeDocument, updateUI];
+    setTimeout(function(){
+        //执行下个任务
+        var task = tasks.shift();
+        task(id);
+
+        //检查是否还有其他任务
+        if(tasks.length > 0){
+            //松耦合递归调用
+            setTimeout(arguments.callee, 25);
+        }
+    },25)
+}
+
+//将以上方法重写，以便复用
+function multistep(steps, args, callback){
+    //克隆数组
+    var tasks = steps.concat();
+    setTimeout(function{
+        //执行下一个任务
+        var task = tasks,shift();
+        task.apply(null, args || []);
+        //检查是否还有其他任务
+        if(tasks.length > 0){
+            setTimeout(arguments.callee, 25);
+        }else{
+            callback();
+        }
+    })
+}
+
+//调用
+function saveDocument(id){
+    var tasks = [openDocument, writeText, closeDocument, updateUI];
+    multistep(tasks,[id],function{
+        alert("Save completed!")
+    })
+}
+```
+- 5.`Web works`新版浏览器的新特性，允许在UI线程外执行js代码。
 
 
+### 第7章：Ajax
 
+- 1.Ajax特性：1.延迟下载体积大的资源文件，使页面加载速度快。2.异步方式在客户端和服务端传输数据。3.只有一个HTTP请求获取整个页面的资源。
+- 2.高性能的向服务器请求数据的三种技术：XHR、动态脚本注入、multipart XHR.
+- 3.XHR(XHLHttpRequest)异步发送和接收数据。`readState == 4`:整个响应接受完毕，`==3`正在和服务器交互之中。可`get`和`post`。
+```java
+var url = '/data.php'
+var params = [
+    'id = 934875',
+    'limit = 20'
+];
+var req = new XMLHttpRequest();
+req.onreadystatechange = function(){
+    if(req.readyState === 4){
+        var responseHeaders = req.getAllResponseHeaders();//获取响应头信息
+        var data = req.responseText;//获取数据
+        //todo 数据处理
+    }
+}
+req.open('GET', url + '?' + params.join('&'), true);
+req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');//设置请求头信息
+req.send(null);//发送一个请求
+```
 
-
+- 4.动态脚本注入：能够跨域请求，控制有限，只能使用`GET`方式。
+- 5.Multipart XHR最新技术，客户端使用一个`HTTP`可以从服务端向客户端传送多个资源，将多个文件打包成双方约定的长字符串，然后进行解析。
+```java
+//将一个获取多张图片的请求发送到服务器
+var req = new XMLHttpRequest();
+req.open('GET','rollup_images.php',true);
+req.onreadystatechage = function(){
+    if(req.readystate == 4){
+        splitImages(req.responseText);
+    }
+}
+req.send(null);
+//服务器读取图片并将它们转换为字符串
+$images = array('kitten.jpg', 'sunset.jpg', 'baby.jpg');
+foreach($images as $image){
+    $image_fh = fopen($image, 'r');
+    $image_data = fread($image_fh, filesize($image));
+    fclose($image_fh);
+    $payloads[] = base64_encode($image_data);
+}
+$newline = chr(1);
+echo implode($newline, $payloads);
+``` 
 
 
 
