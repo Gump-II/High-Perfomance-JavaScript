@@ -443,7 +443,20 @@ foreach($images as $image){
 }
 $newline = chr(1);
 echo implode($newline, $payloads);
+
+//数据传送到客户端并解析
+function splitImages(imageString){
+    var imageData = imageString.split("\u0001");
+    var imageElement;
+
+    for(var i = 0; len = imageData.length; i < len; i++){
+        imageElement = document.createElement('img');
+        imageElement.src = 'data:img/jpg;base64,' + imageData[i];
+        document.getElementById('container').appendChild(imageElement);
+    }
+}
 ``` 
+- 6.使用XHR发送数据到服务器，`GET`会更快，`GET`向服务器只发送一个数据包，而`POST`至少要发送两个数据包，post适合发送大量数据包到服务器。
 
 
 
