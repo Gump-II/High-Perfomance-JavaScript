@@ -20,18 +20,19 @@
 - 1.由于javascript的下载和执行，会阻塞页面的渲染，因此推荐将script放到</body>前面.
 - 2.其中ie支持的`defer`可以不修改DOM，延迟执行脚本。`async`与`defer`相同点是并行下载，下载过程中都不会产生阻塞，但`async`加载完成后执行，`defer`页面加载完成后执行。
 
-```java
-<script type="text/javascript" src="file.js" defer></script>
-```
+> <script type="text/javascript" src="file.js" defer></script>
+
 - 3.加载一次script执行一次`HTTP`请求，所以尽量减少script文件数，减少HTTP请求次数。
 - 4.动态脚本加载，放在`head`里，是通用的无阻赛加载解决方案。
-```java
+
+```javascript
+
     var script=document.createElement("script");
     script.type="text/javascript";
     script.src="jquery.js";
     document.getElementsByTagName('head')[0].appendChild(script); 
-
     script.onload=function(){方法内容}//js加载完成执行方法
+
 ```
 - 5.使用XHR对象下载Javascript代码并注入页面中。
 
@@ -42,7 +43,8 @@
 - 3.`with`和`catch`会提升作用域链，可能将全局变量提升到局部变量之前，反而没得到提升还可能降低性能。少用with，适当catch，catch中可以用委托函数处理的方式来不改变性能。
 - 4.闭包中包含了执行环境作用域链相同的应用，需要更多的内存开销，容易导致内存泄漏。将常用的跨作用域存储在局部变量中。
 - 5.原型链的理解：
-```java
+
+```javascript
 function Person(){
     this.name = "Tom";
     this.sayHello = function(){
@@ -99,7 +101,8 @@ var emp = new Employee('keepfool@xxx.com');
 - 1.Dom的访问与修改，用局部变量存储修改的内容，最后一次性写入，提供性能。
 - 2.使用`innerHTML`比原生`DOM`方法更快。
 - 3.读取集合的`length`比普通数组的`length`要慢很多。
-```java
+
+```javascript
 var coll = document.getElementByTagName('div');
 var arr = toArray(coll);
 
@@ -119,7 +122,8 @@ function looCopiedArray(){
 
 - 4.访问集合元素时使用局部变量。
 - 5.重绘和重排代价昂贵，减少发生次数，合并多次对DOM和样式的修改，一次处理。防止重排:1.文档之外创建更新一个文档片段，然后附加到原始列表中。2.创建备份，对副本进行操作，然后新节点替代旧节点。
-```java
+
+```javascript
 //糟糕的写法，造成三次浏览器重排
 var el = document.getElementById('mydiv');
 el.style.borderLeft = '1px';
@@ -132,7 +136,7 @@ el.style.cssText = 'border-left:1px; border-right:2px; padding:5px';
 ```
 - 6.使用缓存信息
 
-```java
+```javascript
 //效率低，每次移动都要查询便宜量
 myElement.style.left = 1 + myElement.offsetLeft + 'px';
 myElement.style.top = 1 + myElement.offsetTop + 'px';
@@ -280,7 +284,7 @@ for(var i = 0;len = items.length; i < len; i++){
 - 3.循环中使用倒叙的方式可以提神性能，同时，减少属性查找（赋值到局部变量）。
 - 4.达夫设备，每次循环中最多调用八次循环，同时存放余数。
 
-```java
+```javascript
 var i = items.length % 8;
 while(i) {
   process(items[i--]);
@@ -311,13 +315,15 @@ items.forEach(function(value, index, array){
 ### 第5章：字符串和正则表达式
 
 - 1.字符串拼接，避免产生临时字符串来提升性能。
-```java
+
+```javascript
 //第一行会产生临时字符串存储“onetwo”；
 //用两行的方式避免了产生临时字符串，从而提升性能；
 str += "one" + "two";
 
 str += "one";
 str += "two";
+
 ```
 - 2.数量巨大和尺寸巨大的字符串连接时，数组项合并是推荐的方法。
 - 3.数组项合并是最慢的字符串连接方法，推荐使用`+`和`+=`。
@@ -335,7 +341,8 @@ str += "two";
 
 - 1.Js任务执行超过`100ms`，用户会感觉到明显的延迟，体验感不好。
 - 2.Js定时器让出UI线程的控制权(UI)可以更新。函数`greeting`将在250ms后执行，在此期间UI更新和其他Js可以执行。
-```java
+
+```javascript
 function greeting(){
     alert("Hello world");
 }
@@ -343,7 +350,8 @@ setTimeOut(greeting, 250);
 ```
 - 3.Javascript定时器不太精确，通常与几毫秒，推荐延时25ms。
 - 4.如果函数运行时间太长，用定时器进行分割任务。
-```java
+
+```javascript
 //文件操作
 function saveDocument(id){
     openDocument(id);
@@ -402,7 +410,8 @@ function saveDocument(id){
 - 1.Ajax特性：1.延迟下载体积大的资源文件，使页面加载速度快。2.异步方式在客户端和服务端传输数据。3.只有一个HTTP请求获取整个页面的资源。
 - 2.高性能的向服务器请求数据的三种技术：XHR、动态脚本注入、multipart XHR.
 - 3.XHR(XHLHttpRequest)异步发送和接收数据。`readState == 4`:整个响应接受完毕，`==3`正在和服务器交互之中。可`get`和`post`。
-```java
+
+```javascript
 var url = '/data.php'
 var params = [
     'id = 934875',
@@ -423,7 +432,8 @@ req.send(null);//发送一个请求
 
 - 4.动态脚本注入：能够跨域请求，控制有限，只能使用`GET`方式。
 - 5.Multipart XHR最新技术，客户端使用一个`HTTP`可以从服务端向客户端传送多个资源，将多个文件打包成双方约定的长字符串，然后进行解析。
-```java
+
+```javascript
 //将一个获取多张图片的请求发送到服务器
 var req = new XMLHttpRequest();
 req.open('GET','rollup_images.php',true);
@@ -457,7 +467,61 @@ function splitImages(imageString){
 }
 ``` 
 - 6.使用XHR发送数据到服务器，`GET`会更快，`GET`向服务器只发送一个数据包，而`POST`至少要发送两个数据包，post适合发送大量数据包到服务器。
+- 7.xml优点：格式统一，符合标准，容易交互，数据共享方便。缺点：文件庞大，格式复杂，占用带宽，不同浏览器解析xml方式不一样，浪费资源和时间。
+- 8.json优点：轻量级，易读写，占用宽带小，支持多种语言，易开发，易维护。其缺点：没有xml通用性好。
 
+### 第8章：编程实践
+
+- 1.通过避免使用`eval()`和`Function()`构造器来避免双重求值带来性能消耗。`setTimeout()`和'setInterval()'不建议传递字符串。
+- 2.创建对象和数组使用直接量的效率会大大提升。
+
+
+```javascript
+//以下为传统方式非直接量
+//创建一个对象
+var myObject = new Object();
+myObject.name = "Tom";
+myObject.count = 50;
+myObject.flag = true;
+myObject.pointer = null;
+
+//创建一个数组
+var myArray = new Array();
+myArray[0]  = "Tom";
+myArray[1] = 50;
+myArray[2] = true;
+myArray [3] = null;
+
+//------------------------
+//使用直接量的方创建
+var myObject = {
+    name : "Tom",
+    count : 50;
+    flag = true,
+    pointer = null
+};                                                                                                                                      
+var myArray = ["Tom"m 50, true, null];
+
+```
+
+- 3.避免重复工作，当需要检测到浏览器时，可以使用延迟加载和条件预加载。
+- 4.在数学计算时，考虑使用直接操作数字的二进制形式的位运算。
+
+> var num = 25; num.toString(2); //"110001"
+
+- 5.使用js原生方法比任何代码都要快，特别是数学运算，使用`Math`对象。
+
+### 第9章：构建并部署高性能JavaScript应用
+
+- 1.合并javascript文件来减少HTTP请求。
+- 2.使用YUI Compressor压缩javascript文件。
+- 3.在服务端压缩javascript文件（GZip编码）。
+- 4.设置HTTP响应头来缓存javascript文件，通过文件名增加时间戳来避免缓存问题。
+- 5.使用CDN（分发网络）提高性能，同时可以文件管理和压缩。
+
+---
+
+注：完结，第十章工具省略，总体大概浏览，要更进一步的掌握需每个知识点进行研读和查阅相关资料，并测试coding。
 
 
 
